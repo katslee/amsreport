@@ -49,18 +49,23 @@ def reportpdf(args: List[str]) -> None:
     }
     prefs = {'printing.print_preview_sticky_settings.appState': json.dumps(settings)}
     browser_options.add_experimental_option('prefs', prefs)
-    browser_options.add_argument('--kiosk-printing')
+#    browser_options.add_argument('--kiosk-printing')
     browser_options.add_argument('lang-zh_CN.UTF-8')
     browser_options.add_argument('-lang=zh')
-    browser_options.add_argument("--headless")
+#    browser_options.add_argument("--headless")
 
 # Selenium print preference
     prefs = {
-        'printing.print_preview_sticky_settings.appState': json.dumps(settings),
-        "savefile.default_directory": savefolder,
+        'printing.print_preview_sticky_settings.appState' : json.dumps(settings),
+        "savefile.default_directory" : savefolder,
         "displayHeaderFooter" : True,
+        "mediaSize": {
+            "height_microns" : 297000,
+            "name" : "ISO_A4",
+            "width_microns" : 210000,
+            "custom_display_name" : "A4"
+        },
         "landscape": True,
-#        "footerTemplate": "<div style='color: lightgray; border-top: solid lightgray 1px; font-size: 10px; padding-top: 5px; text-align: center; width: 100%;'><span>Page </span> - <span class='pageNumber''></span></div>",
         "footerTemplate": "<div style='font-size: 8px; padding-top: 5px; text-align: center; width: 100%;'><span>Page </span><span class='pageNumber''></span> of <span class='totalPages'></span></div>",
     }
     browser_options.add_experimental_option('prefs', prefs)
@@ -88,7 +93,7 @@ def reportpdf(args: List[str]) -> None:
 
 # Set virtual browser printing preview timeout
     webbrowser.set_script_timeout(300)
-
+    prefs_check = {'printing.print_preview_sticky_settings.appState': json.dumps(settings)}
 # Print the page as PDF
     #webbrowser.execute_script("window.print();")
     pdf_data = webbrowser.execute_cdp_cmd("Page.printToPDF", prefs)
